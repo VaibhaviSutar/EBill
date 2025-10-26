@@ -1,0 +1,41 @@
+﻿@model EBill.Models.Bill
+@{
+    ViewData["Title"] = "Delete Bill";
+}
+
+<h2>Delete Bill</h2>
+
+<h4>Are you sure you want to delete this bill?</h4>
+<hr />
+<div>
+    <h5>Customer: @Model.CustomerName</h5>
+    <h5>Total: @Model.Total</h5>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Qty</th>
+                <th>Price</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Items)
+            {
+                <tr>
+                    <td>@item.ProductName</td>
+                    <td>@item.Quantity</td>
+                    <td>@item.Price</td>
+                    <td>@(item.Quantity* item.Price)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <button type="submit" class="btn btn-danger">Delete</button>
+        <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>

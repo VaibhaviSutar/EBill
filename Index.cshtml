@@ -1,0 +1,69 @@
+﻿@model IEnumerable<EBill.Models.Bill>
+@{
+    ViewData["Title"] = "Bills List";
+}
+
+<h2>Bills List</h2>
+<a asp-action="Create" class="btn btn-primary mb-3">Add New Bill</a>
+
+<table class="table table-bordered table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>Customer</th>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Total</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var bill in Model)
+        {
+            if (bill.Items != null && bill.Items.Any())
+            {
+                // First row for the bill
+                <tr>
+                    <td rowspan="@bill.Items.Count">@bill.CustomerName</td>
+                    <td>@bill.Items[0].ProductName</td>
+                    <td>@bill.Items[0].Quantity</td>
+                    <td>@bill.Items[0].Price</td>
+                    <td rowspan="@bill.Items.Count">@bill.Total</td>
+                    <td rowspan="@bill.Items.Count">
+                        <a asp-action="Edit" asp-route-id="@bill.Id" class="btn btn-warning btn-sm">Edit</a>
+                        <a asp-action="Delete" asp-route-id="@bill.Id" class="btn btn-danger btn-sm">Delete</a>
+                        <a asp-action="DownloadPdf" asp-route-id="@bill.Id" class="btn btn-success btn-sm">
+                            Download PDF
+                        </a>
+                    </td>
+                </tr>
+
+                // Additional rows for the bill's other items
+                for (int i = 1; i < bill.Items.Count; i++)
+                {
+                    <tr>
+                        <td>@bill.Items[i].ProductName</td>
+                        <td>@bill.Items[i].Quantity</td>
+                        <td>@bill.Items[i].Price</td>
+                    </tr>
+                }
+            }
+            else
+            {
+                // If no items, show empty placeholders
+                <tr>
+                    <td>@bill.CustomerName</td>
+                    <td colspan="3">No items</td>
+                    <td>@bill.Total</td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@bill.Id" class="btn btn-warning btn-sm">Edit</a>
+                        <a asp-action="Delete" asp-route-id="@bill.Id" class="btn btn-danger btn-sm">Delete</a>
+                        <a asp-action="DownloadPdf" asp-route-id="@bill.Id" class="btn btn-success btn-sm">
+                            Download PDF
+                        </a>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
